@@ -5,8 +5,12 @@
         <title>MyCollection</title>
         <c:url value="/images/favicon.ico" var="favicon_Url" />
         <link rel="shortcut icon" href="${favicon_Url}" type="image/ICO">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+        <c:url value="/public/bootstrap-3.3.2/css/bootstrap.min.css" var="bootstrap_Url" />
+        <link rel="stylesheet" href="${bootstrap_Url}">
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+        <c:url value="/public/jquery-3.1.1/jquery-3.1.1.min.js" var="jquery_Url" />
+        <script src="${jquery_Url}"></script>
 
         <style type="text/css">
             .main-info {width: 600px; margin: auto;}
@@ -40,6 +44,10 @@
             </h1>
 
             <!-- MENU BUTTONS-->
+            <c:url value="/" var="_Url" />
+            <a href="${_Url}"><button type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-home"></span> Home
+            </button></a>
             <c:url value="/view_collections" var="view_collections_Url" />
             <a href="${view_collections_Url}"><button type="button" class="btn btn-primary">
                 <span class="glyphicon glyphicon-list"></span> Collections
@@ -121,7 +129,7 @@
                         login:"<strong>admin</strong>" - password:"<strong>password</strong>";<br>
                         login:"<strong>user</strong>" - password:"<strong>password</strong>";<br><br>
                     <strong>Source code hear:</strong><br>
-                    <a href="https://github.com/VitaliiVK">github.com/VitaliiVK</a><br><br>
+                    <a href="https://github.com/VitaliiVK/MyCollection">github.com/VitaliiVK/MyCollection</a><br><br>
                 </c:when>
 
                 <c:when test="${action eq 'my_profile'}"> <!-- PROFILE-->
@@ -186,7 +194,6 @@
                                         <c:set var="collectorInformation" value="${collector.information}"/>
                                         <c:set var="collectorCollectionsList" value="${collector.collectionsList}"/>
                                         <!--urls-->
-                                        <c:url value="/view_collection/id_${collection.id}" var="view_collection_URL" />
                                         <c:url value="/photo/collector/${collector.id}" var="photo_collector_URL" />
                                         <tr>
                                             <td align="center"><img src="${photo_collector_URL}" width="200" tabindex="1" alt="collector photo"
@@ -231,6 +238,7 @@
                                                 <strong><span class="glyphicon glyphicon-th-list"></span> Collections list:</strong>
                                                 <div style="margin-left: 20px;">
                                                     <c:forEach items="${collectorCollectionsList}" var="collection">
+                                                        <c:url value="/view_collection/id_${collection.id}" var="view_collection_URL" />
                                                         <a href="${view_collection_URL}">
                                                             <c:out value="${collection.name}"/></a><br>
                                                     </c:forEach>

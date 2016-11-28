@@ -10,52 +10,51 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Configuration //конфигурация для работы Spring security
-@EnableWebSecurity // включить Spring security - фреймворк для работы с авторизацией
+@Configuration //Spring security Configuration
+@EnableWebSecurity // Enable Spring security - framework for authorization
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired//автоинициализация
+    @Autowired//auto initialization
     private UserDetailsService userDetailsService; //адапетр между нашей учетной записью и spring учетной записью
 
-    @Autowired//автоинициализация
+    @Autowired//auto initialization
     public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userDetailsService) //указываем класс адапетр между нашей учетной записью и spring учетной записью
-                .passwordEncoder(getShaPasswordEncoder()); //и бин который будет хешировать пароли для хранения в базе
+            .userDetailsService(userDetailsService) // We specify the class adapetr between our Account and spring Account
+            .passwordEncoder(getShaPasswordEncoder()); //Bin to encode password before writing to the database
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception { //правила работы Spring security
+    protected void configure(HttpSecurity http) throws Exception { //Spring security configure
         http
-                .csrf().disable() //отключаем какуюто хрень
-                .authorizeRequests() //все запросы к приложению должны быть авторизированы
-                .antMatchers("/","/public/**").permitAll() //корневая страница доступна всем пользователям
-                .antMatchers("/add_collection").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/add_instance").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/update_remove_instance").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/my_collections").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/my_profile").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/admin").hasRole("ADMIN") //доступ на секретную страничку админа только дял админа
+                .csrf().disable() //disable csrf
+                .authorizeRequests()
+                .antMatchers("/").permitAll() //root page / and /public is available to all users
+                .antMatchers("/add_collection").hasAnyRole("USER", "ADMIN") //page available for authorize user only
+                .antMatchers("/add_instance").hasAnyRole("USER", "ADMIN") //page available for authorize user only
+                .antMatchers("/update_remove_instance").hasAnyRole("USER", "ADMIN") //page available for authorize user only
+                .antMatchers("/my_collections").hasAnyRole("USER", "ADMIN") //page available for authorize user only
+                .antMatchers("/my_profile").hasAnyRole("USER", "ADMIN") //page available for authorize user only
+                .antMatchers("/admin").hasRole("ADMIN") // page available to ADMIN only
                 .and() //
-        .exceptionHandling().accessDeniedPage("/unauthorized") // страничка для неавторизированного запроса
+        .exceptionHandling().accessDeniedPage("/unauthorized") // unauthorized request page
                 .and() //
-        .formLogin() //сравила логина
-                .loginPage("/login") //указываем страничку логина
-                .loginProcessingUrl("/j_spring_security_check") //ссылка куда форма должна передать логин и пароль
-                .failureUrl("/login?error") //страничка если неправильный логин или пароль (таже страница + параметр error)
-                .usernameParameter("j_login") // имена полей в форме
-                .passwordParameter("j_password") // имена полей в форме
-                .permitAll() // форма логина доступна для всех
+        .formLogin() //login
+                .loginPage("/login") // login page
+                .loginProcessingUrl("/j_spring_security_check") // URL for rom on login page
+                .failureUrl("/login?error") // page for wrong login or password (login page + "error" param)
+                .usernameParameter("j_login") // field name in form on login page
+                .passwordParameter("j_password") // field name in form on login page
+                .permitAll() // login page is available to all users
                 .and()
-        .logout()
-                .permitAll() // логаут доступен для всех для всех
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/?logout") //сюда перейдем после выхода (таже страница + параметр logout)
-                .invalidateHttpSession(true); //прибить сессию после логаута
-
+        .logout() //logout
+                .permitAll() // logout page is available to all users
+                .logoutUrl("/logout") // URL for rom on logout page
+                .logoutSuccessUrl("/?logout") // after logout page (home page + "logout" param)
+                .invalidateHttpSession(true); //destroy session after logout
     }
 
-    @Bean
+    @Bean //Bin to encode password before writing to the database
     public ShaPasswordEncoder getShaPasswordEncoder(){
         return new ShaPasswordEncoder();
     }

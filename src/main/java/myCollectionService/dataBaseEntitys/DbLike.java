@@ -2,24 +2,27 @@ package myCollectionService.dataBaseEntitys;
 
 import javax.persistence.*;
 
-//лайк
-@Entity //сущность из базы данных
+//Like
+@Entity //Entity from data base
 public class DbLike {
     @Id
     @GeneratedValue
-    private long id; // колонка id с автогенерацией
+    private long id;
 
-    @JoinColumn(name="instance_id") //имя колонки связанной колонки
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    private Instance instance;//коллекционер
+    //Instance of this Like
+    @JoinColumn(name="instance_id") //Column name in table DbLike is "instance_id"
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Instance instance;//Instance
 
+    //Collection of this Like
     @JoinColumn(name="collection_id")
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    private MyCollection collection;//коллекция
+    @ManyToOne(fetch = FetchType.LAZY) //Column name in table DbLike is "collection_id"
+    private MyCollection collection;//Collection
 
-    @JoinColumn(name="collector_id") //имя колонки связанной колонки
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    private Collector collector; //коллекционер
+    //Collector of this Like
+    @JoinColumn(name="collector_id")
+    @ManyToOne(fetch = FetchType.LAZY) //Column name in table DbLike is "collector_id"
+    private Collector collector; //Collector
 
     public DbLike() {
     }

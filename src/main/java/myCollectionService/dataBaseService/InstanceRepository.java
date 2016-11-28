@@ -7,10 +7,12 @@ import myCollectionService.dataBaseEntitys.Instance;
 
 import java.util.List;
 
+//methods for work with Instance table
 public interface InstanceRepository extends JpaRepository<Instance, Long>{
 
-    //из списка экземпляров коллекции, id которой передается
-    // вернуть список экземпляров, у которых в назнании есть переденная строка
+    // for search form on "view collection page"
+    // get Instance list(from Instance table) from collection with requested id,
+    // where field "name" like requested String
     @Query("SELECT c FROM Instance c where c.name like:search and c.myCollection.id =:collection_id")
     List<Instance> findCurrentCollectionsInstancesBySearchName(@Param("search")String search, @Param("collection_id")Long collection_id);
 }

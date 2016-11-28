@@ -14,25 +14,27 @@ import myCollectionService.dataBaseEntitys.Collector;
 import java.util.HashSet;
 import java.util.Set;
 
-//адапетр между учетной записью нашего класса Collector и учетной записью библиотечного класса User из SpringSecurity
+//Been adapter between account of our class and Collector and account of library class User of SpringSecurity
 
-@Service // Spring анотация, производная от @Component, спринг атоматически создаст бин UserDetailsServiceImpl
+@Service // Spring annotation,  derived from @Component
+// Spring will automatically create the bin UserDetailsService Impl
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+
+    @Autowired //auto initialization
     private DbService dbService;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        //с помощью обьекта collectorService вытаскиваем из базы учетную запись нашего класса Collector
+        //via collector Service object from the database take our class account Collector
         Collector collector = dbService.getCollectorByLogin(login);
-        if (collector == null) //если пользователя с таким логином нет кидаем исключение как указано в документации
+        if (collector == null) //if user with this login is no exist throw UsernameNotFoundException
             throw new UsernameNotFoundException(login + " not found");
 
-        //конструкция для передачи роли в обьект учетной записи Spring класса User передаем Set
+        //Structure for transmitting of role to object Spring account if User class , pass as Set
         Set<GrantedAuthority> roles = new HashSet<>();
         roles.add(new SimpleGrantedAuthority(collector.getRole().toString()));
 
-        //возвращаем учетную запись библиотечного класса User из SpringSecurity
+        //Return the account of the User library class from SpringSecurity
         return new User(collector.getLogin(), collector.getPassword(), roles);
     }
 }

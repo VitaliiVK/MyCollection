@@ -4,20 +4,20 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//коллекционер
-@Entity //сущность из базы данных
+//Collector
+@Entity //Entity from data base, table name is "Collector"
 public class Collector { //таблица будет называться Collector
     @Id
     @GeneratedValue
-    private long id; // колонка id с автогенерацией
+    private long id;
 
     @Column(nullable = false, unique = true)
     private String login;
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING) // анотация jpa - колонка типа enum, в таблице будут храниться записи в фотамете String
-    private UserRole role; // значение из класса UserRole - роль пользователя (admin/user)
+    @Enumerated(EnumType.STRING) // jpa annotation - column type enum, is table format String
+    private UserRole role; // value from class UserRole (admin/user)
 
     private String name;
     private String surname;
@@ -31,20 +31,17 @@ public class Collector { //таблица будет называться Collec
     @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
 
-    //тип связи OneToMany, сопоставляется с полем по имени "collector"
-    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
-    private List<MyCollection> collectionsList = new ArrayList<>(); //список коллекций коллекционера
-    //обратная свять - указано имя поля
+    //Collection list of this Collector
+    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)//field name in Instance MyCollection is "collector"
+    private List<MyCollection> collectionsList = new ArrayList<>(); //Collection list
 
-    //тип связи OneToMany, сопоставляется с полем по имени "collector"
-    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
-    private List<DbLike> DbLikeList = new ArrayList<>(); //список лайков коллекционера
-    //обратная свять - указано имя поля
+    //Like list of this Collector
+    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)//field name in DbLike Class is "collector"
+    private List<DbLike> DbLikeList = new ArrayList<>(); //Like list
 
-    //тип связи OneToMany, сопоставляется с полем по имени "collector"
-    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
-    private List<Comment> commentList = new ArrayList<>(); //список коментакиев коллекционера
-    //обратная свять - указано имя поля
+    //Comments List of this collector
+    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)//field name in Comment Class is "collector"
+    private List<Comment> commentList = new ArrayList<>(); //Comments List
 
     public Collector() {}
 
@@ -58,7 +55,6 @@ public class Collector { //таблица будет называться Collec
         collection.setCollector(this);
         collectionsList.add(collection);
     }
-
 
     public void addLike(DbLike DbLike) {
         DbLike.setCollector(this);

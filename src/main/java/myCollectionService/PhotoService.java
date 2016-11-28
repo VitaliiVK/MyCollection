@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-//класс для обработки изображений перед загрузкой в базу данных
+//class for image processing before being loaded into the database
 @Service
 public class PhotoService {
     public byte[] cropPhoto(byte[] originArr){

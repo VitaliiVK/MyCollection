@@ -2,26 +2,29 @@ package myCollectionService.dataBaseEntitys;
 
 import javax.persistence.*;
 
-//комментарий
-@Entity //сущность из базы данных
+//Comment
+@Entity //Entity from data base
 public class Comment {
     @Id
     @GeneratedValue
-    private long id; // колонка id с автогенерацией
+    private long id;
 
-    @JoinColumn(name="instance_id") //имя колонки связанной колонки
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    private Instance instance;//экземпляр
+    //Instance of this comment
+    @JoinColumn(name="instance_id") //Column name in table Comment is "instance_id"
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Instance instance;//Instance
 
-    @JoinColumn(name="collection_id")
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    private MyCollection collection;//коллекция
+    //Collection of this comment
+    @JoinColumn(name="collection_id") //Column name in table MyCollection is "collection_id"
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MyCollection collection;//Collection
 
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    @JoinColumn(name="collector_id") //имя колонки связанной колонки
-    private Collector collector; //коллекционер
+    //Collector of this comment
+    @JoinColumn(name="collector_id") //Column name in table Collector is "collector_id"
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Collector collector; //Collector
 
-    private String text; // текст комментария
+    private String text; // text of comment
 
     public Comment() {
     }

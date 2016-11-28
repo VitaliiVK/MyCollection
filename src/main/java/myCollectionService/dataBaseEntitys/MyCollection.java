@@ -4,12 +4,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//коллекция
-@Entity //сущность из базы данных
+//Collection
+@Entity //Entity from data base, table name is "MyCollection"
 public class MyCollection implements EntityForLikeAndComment {
     @Id
     @GeneratedValue
-    private long id; // колонка id с автогенерацией
+    private long id;
 
     private String name;
     private String type;
@@ -18,24 +18,22 @@ public class MyCollection implements EntityForLikeAndComment {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
 
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    @JoinColumn(name="collector_id") //имя колонки связанной колонки
-    private Collector collector; //коллекционер
+    //Collector of this Collection
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="collector_id") // Column name in table
+    private Collector collector;
 
-    //тип связи OneToMany, сопоставляется с полем по имени "myCollectio"
-    @OneToMany(mappedBy = "myCollection", cascade = CascadeType.ALL)
-    private List<Instance> instances = new ArrayList<>(); //список экземпляров коллекции
-    //обратная свять - указано имя поля
-
-    //тип связи OneToMany, сопоставляется с полем по имени "collection"
-    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
-    private List<DbLike> likeList = new ArrayList<>(); //список лайков к коллекции
-    //обратная свять - указано имя поля
+    //Instances List of this Collection
+    @OneToMany(mappedBy = "myCollection", cascade = CascadeType.ALL) //field name in Instance Class is "myCollection"
+    private List<Instance> instances = new ArrayList<>(); // Instances List
 
     //тип связи OneToMany, сопоставляется с полем по имени "collection"
-    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
-    private List<Comment> commentsList = new ArrayList<>(); //список комментариев к коллекции
-    //обратная свять - указано имя поля
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL) //field name in DbLike Class is "collection"
+    private List<DbLike> likeList = new ArrayList<>(); // Like List
+
+    //тип связи OneToMany, сопоставляется с полем по имени "collection"
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL) //field name in DbLike Comment is "collection"
+    private List<Comment> commentsList = new ArrayList<>(); // Comment List
 
     public MyCollection() {
     }

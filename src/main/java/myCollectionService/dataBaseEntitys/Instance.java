@@ -4,33 +4,33 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//экземпляр в коллекции
-@Entity //сущность из базы данных
+//Instance
+@Entity //Entity from data base
 public class Instance implements EntityForLikeAndComment {
     @Id
     @GeneratedValue
-    private long id; // колонка id с автогенерацией
+    private long id;
 
     private String name;
     private String subtype;
     private String information;
 
+    //Instance Photo
     @Column(columnDefinition = "LONGBLOB")
     private byte[] photo;
 
-    @ManyToOne(fetch = FetchType.LAZY) //тип связи ManyToOne, загрузка LAZY
-    @JoinColumn(name="collection_id") //имя колонки связанной колонки
-    private MyCollection myCollection; //коллекция к которой принадлежит экземпляр
+    //Collection of this Instance
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="collection_id") //Column name in table DbLike is "Instance_id"
+    private MyCollection myCollection; //Collection
 
-    //тип связи OneToMany, сопоставляется с полем по имени "instance"
-    @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
-    private List<DbLike> likeList = new ArrayList<>(); //список лайков экземпляра
-    //обратная свять - указано имя поля
+    //Lice list of this Instance
+    @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)//field name in DbLike Class is "instance"
+    private List<DbLike> likeList = new ArrayList<>(); //Like List
 
-    //тип связи OneToMany, сопоставляется с полем по имени "instance"
-    @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)
-    private List<Comment> commentsList = new ArrayList<>(); //список коментариев к экземпляру
-    //обратная свять - указано имя поля
+    //Comment list of this Instance
+    @OneToMany(mappedBy = "instance", cascade = CascadeType.ALL)//field name in Comment Class is "instance"
+    private List<Comment> commentsList = new ArrayList<>(); //Comments list
 
     public Instance() {
     }

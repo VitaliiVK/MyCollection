@@ -5,7 +5,9 @@
     <title>MyCollection</title>
     <c:url value="/images/favicon.ico" var="favicon_Url" />
     <link rel="shortcut icon" href="${favicon_Url}" type="image/ICO">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+    <c:url value="/public/bootstrap-3.3.2/css/bootstrap.min.css" var="bootstrap_Url" />
+    <link rel="stylesheet" href="${bootstrap_Url}">
 </head>
 <body>
 <div align="center">

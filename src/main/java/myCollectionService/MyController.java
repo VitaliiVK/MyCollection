@@ -25,9 +25,9 @@ import java.util.List;
 public class MyController {
 
     @Autowired
-    private DbService dbService; //обьект содержащий методлы для работы с базой данных
+    private DbService dbService; //object contains methods for working with database
     @Autowired
-    private ShaPasswordEncoder shaPasswordEncoder; //хеш шифратор для паролей
+    private ShaPasswordEncoder shaPasswordEncoder; //hash encoder for passwords
     @Autowired
     private PhotoService photoService;
 
@@ -392,20 +392,28 @@ public class MyController {
                                               @RequestParam long id,
                                               @RequestParam String user_login,
                                               @RequestParam String like_action){
+        Collector collector = dbService.getCollectorByLogin(user_login);
+        if(collector==null){
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
         EntityForLikeAndComment entity = null;
+        boolean likeIsExist = false;
         if(instance_or_collection.equals("instance")){
             entity = dbService.getInstanceById(id);
+            likeIsExist =  dbService.isExistInstanceLike(collector, id);
         }
-        else{
+        else{//collection
             entity = dbService.getCollectionById(id);
+            likeIsExist =  dbService.isExistCollectionLike(collector, id);
         }
-        Collector collector = dbService.getCollectorByLogin(user_login);
-        if(like_action.equals("add_like")){
-            DbLike like = new DbLike(collector,entity);
-            dbService.addLike(like);
-        }
-        else{
-            dbService.removeLike(collector,instance_or_collection,id);
+        if(entity!=null) {
+            if (like_action.equals("add_like") && !likeIsExist) {
+                DbLike like = new DbLike(collector, entity);
+                dbService.addLike(like);
+            }
+            if (like_action.equals("remove_like") && likeIsExist) {
+                dbService.removeLike(collector, instance_or_collection, id);
+            }
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -427,7 +435,7 @@ public class MyController {
     }
 
 
-    /* deprecate, cause static resources was add
+    /* redundant, cause static resources was add
     //URL /image/{image}.{format} for read photo from file
     @RequestMapping("/image/{image}.{format}")
     public ResponseEntity<byte[]> image(@PathVariable("image") String image,

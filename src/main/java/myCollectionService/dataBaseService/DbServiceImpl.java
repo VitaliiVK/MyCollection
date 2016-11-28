@@ -7,15 +7,14 @@ import myCollectionService.dataBaseEntitys.*;
 
 import java.util.List;
 
-// в этом классе мы реализуем методы необходимые нам для работы с базой данных
+// this class implements all method for work with data base
+// use objects Class extends JpaRepository for each table in the database
+// this Class contain standard methods for work with data base
 
-// реализацию осуществляем с помощью интрефейса Repository реализованного для каждой таблицей с которой будем работать,
-// и содержащего готовые методы для работы с таблицей и методы которые мы прописали и связали с конкретными jpql запросами
-
-@Service // Spring анотация, производная от @component, спринг атоматически создаст бин DbServiceImpl и положит в контекст
+@Service // Spring annotation,  derived from @Component
+// Spring will automatically create the bin DbServiceImpl
 public class DbServiceImpl implements DbService {
 
-    //автоматическая инициализация репозиториев
     @Autowired
     private CollectorRepository collectorRepository;
     @Autowired
@@ -27,19 +26,19 @@ public class DbServiceImpl implements DbService {
     @Autowired
     private CommentRepository  commentRepository;
 
-    //методы для работы с коллекционером
+    //methods for work with Collector table
 
     @Override
-    @Transactional(readOnly = true) //заворачиваем все происходящее в методе в транзакцию, только чтение
+    @Transactional(readOnly = true) //make transaction for read
     public Collector getCollectorByLogin(String login) {
-        return collectorRepository.findByLogin(login); //метод который реазизовали мы
+        return collectorRepository.findByLogin(login); //custom method in CollectorRepository
     }
 
     @Override
-    @Transactional(readOnly = true) //заворачиваем все происходящее в методе в транзакцию, только чтение
+    @Transactional(readOnly = true)
     public Collector getCollectorById(long id){
         return  collectorRepository.getOne(id);
-        // .getOne()готовый метод который достался CollectorRepository по наследству от JpaRepository
+        // .getOne() standard methods for work with data base inherited CollectorRepository from JpaRepository
     }
 
     @Override
@@ -49,7 +48,7 @@ public class DbServiceImpl implements DbService {
     }
 
     @Override
-    @Transactional
+    @Transactional //make transaction
     public void addCollector(Collector collector) {
         collectorRepository.save(collector);
     }
@@ -66,11 +65,11 @@ public class DbServiceImpl implements DbService {
         return collectorRepository.findAll();
     }
 
-    //методы для работы с коллекцией
+    //methods for work with MyCollection table
 
     @Override
     @Transactional
-    public void addCollection(MyCollection collection) { //добавсить коллекцию
+    public void addCollection(MyCollection collection) {
         collectionRepository.save(collection);
     }
 
@@ -116,7 +115,7 @@ public class DbServiceImpl implements DbService {
         return collectionRepository.findCurrentUserCollectionsBySearchName("%" +search+ "%", id);
     }
 
-    //методя для работы с экземплярами
+    //methods for work with Instance table
 
     @Override
     @Transactional
@@ -148,7 +147,7 @@ public class DbServiceImpl implements DbService {
         return instanceRepository.findCurrentCollectionsInstancesBySearchName("%" +search+ "%", id);
     }
 
-    //методы для работы с лайками
+    //methods for work with DbLike table
 
     @Override
     @Transactional
@@ -170,7 +169,23 @@ public class DbServiceImpl implements DbService {
         }
     }
 
-    //методы для работы с комментариями
+    @Override
+    @Transactional
+    public boolean isExistCollectionLike(Collector collector, long collection_id){
+        long collector_id = collector.getId();
+        DbLike like = likeRepository.findCollectionLikeByInstanceIdAndUserId(collector_id, collection_id);
+        return like != null;
+    }
+
+    @Override
+    @Transactional
+    public boolean isExistInstanceLike(Collector collector, long instance_id){
+        long collector_id = collector.getId();
+        DbLike like = likeRepository.findInstanceLikeByInstanceIdAndUserId(collector_id, instance_id);
+        return like != null;
+    }
+
+    //methods for work with Comment table
 
     @Override
     @Transactional
